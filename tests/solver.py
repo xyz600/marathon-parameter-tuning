@@ -50,21 +50,6 @@ def solve(problem: Board, start_time: float, config: Config) -> Tuple[float, Lis
                 ans += abs(problem.table[i][j] - answer.table[i][j])
         return ans
 
-    solution = [Mountain(0, 0, 0) for i in range(m)]
-    for i in range(m):
-        solution[i].x = random.randint(0, n - 1)
-        solution[i].y = random.randint(0, n - 1)
-        solution[i].height = random.randint(
-            0, int(n * config.max_init_height_rate))
-    solution_board = Board([[0 for i in range(n)] for j in range(n)])
-    eval = evaluate(solution_board)
-
-    best_eval = 1e100
-    best_solution: List[Mountain] = []
-
-    counter = 0
-    time_rate = 0.0
-
     def remove_mountain(board: Board, m: Mountain):
         for i in range(n):
             for j in range(n):
@@ -78,6 +63,24 @@ def solve(problem: Board, start_time: float, config: Config) -> Tuple[float, Lis
                 distance = abs(m.y - i) + abs(m.x - j)
                 h = max(m.height - distance, 0)
                 board.table[i][j] += h
+
+    solution = [Mountain(0, 0, 0) for i in range(m)]
+    for i in range(m):
+        solution[i].x = random.randint(0, n - 1)
+        solution[i].y = random.randint(0, n - 1)
+        solution[i].height = random.randint(
+            1, int(n * config.max_init_height_rate) - 1)
+    solution_board = Board([[0 for i in range(n)] for j in range(n)])
+    for i in range(m):
+        add_mountain(solution_board, solution[i])
+
+    eval = evaluate(solution_board)
+
+    best_eval = 1e100
+    best_solution: List[Mountain] = []
+
+    counter = 0
+    time_rate = 0.0
 
     def accept(eval_diff: float):
         return eval_diff < 0 or math.exp(-config.inverse_temperature * time_rate * eval_diff) < random.random()
@@ -117,12 +120,12 @@ def solve(problem: Board, start_time: float, config: Config) -> Tuple[float, Lis
             HIGH = 1
             LOW = 0
 
-            diff = int(config.max_diff_rate * n * (1.0 - time_rate) + 1.0)
+            diff = max(1, int(config.max_diff_rate * n * (1.0 - time_rate)))
             high_low = random.randint(0, 1)
-            if solution[index].height < diff:
-                high_low = HIGH
-            elif n < solution[index].height + diff:
+            if n < solution[index].height + diff:
                 high_low = LOW
+            if solution[index].height <= diff:
+                high_low = HIGH
 
             if high_low == LOW:
                 diff *= -1
@@ -159,10 +162,10 @@ if __name__ == "__main__":
 
     start_time = time.time()
 
-    inverse_temperature = 0.01
-    neighbor_select_rate = 0.3
-    max_init_height_rate = 1.0
-    max_diff_rate = 0.3
+    inverse_temperature = 1.31e-6
+    neighbor_select_rate = 0.10
+    max_init_height_rate = 0.90
+    max_diff_rate = 0.47
 
     if len(sys.argv) == 5:
         inverse_temperature = float(sys.argv[1])

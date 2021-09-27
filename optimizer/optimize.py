@@ -63,7 +63,7 @@ class Evaluator:
         return sum(result) / len(result)
 
     def doit(self):
-        study = optuna.create_study()
+        study = optuna.create_study(direction='minimize')
         study.optimize(self.__evaluate, n_trials=self.config.number_of_iteration,
                        n_jobs=self.config.parallel_job_size)
 

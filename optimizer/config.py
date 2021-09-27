@@ -51,8 +51,7 @@ class Config:
                 assert(0 < param.range_to)
 
         assert(os.path.exists(self.dataset_template.format(0)))
-        assert(os.path.exists(self.dataset_template.format(self.data_size - 1)))
-        assert(os.path.exists(self.exec_path))
+        assert(os.path.exists(self.dataset_template.format(self.dataset_size - 1)))
 
     def __init__(self, yaml_filepath: str):
         with open(yaml_filepath) as fin:
