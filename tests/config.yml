@@ -1,0 +1,26 @@
+dataset_template: "tests/dataset/{}.txt"
+number_of_iteration: 30
+dataset_size: 5
+exec_path: "pypy3 tests/solver.py"
+parallel_job_size: 2
+param_list:
+  - name: reverse_temperature
+    type: float
+    range_from: 1e-8
+    range_to: 1e-1
+    scale: log
+  - name: neighbor_select_rate
+    type: float
+    range_from: 0.1
+    range_to: 0.9
+    scale: linear
+  - name: max_init_height_rate
+    type: float
+    range_from: 0.1
+    range_to: 0.9
+    scale: linear
+  - name: max_diff_rate
+    type: float
+    range_from: 0.05
+    range_to: 0.5
+    scale: linear
