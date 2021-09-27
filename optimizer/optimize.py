@@ -5,6 +5,7 @@ import subprocess
 import tempfile
 import sys
 from config import Config, Type, Scale, Param
+import argparse
 
 
 class Evaluator:
@@ -69,7 +70,12 @@ class Evaluator:
 
 if __name__ == "__main__":
 
-    config = Config("config.yml")
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "config_path", help="configuration path for parameter tuning")
+    args = parser.parse_args()
+
+    config = Config(args.config_path)
 
     evaluator = Evaluator(config)
     evaluator.doit()
