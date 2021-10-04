@@ -35,7 +35,7 @@ class Evaluator:
                 return trial.suggest_uniform(
                     param.name, param.range_from, param.range_to)
         else:
-            return trial.suggest_uniformint(
+            return trial.suggest_int(
                 param.name, param.range_from, param.range_to)
 
     def __evaluate(self, trial: optuna.Trial):
