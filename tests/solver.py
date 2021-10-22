@@ -167,11 +167,12 @@ if __name__ == "__main__":
     max_init_height_rate = 0.90
     max_diff_rate = 0.47
 
-    if len(sys.argv) == 5:
-        inverse_temperature = float(sys.argv[1])
-        neighbor_select_rate = float(sys.argv[2])
-        max_init_height_rate = float(sys.argv[3])
-        max_diff_rate = float(sys.argv[4])
+    if len(sys.argv) == 6:
+        _temp = sys.argv[1]
+        inverse_temperature = float(sys.argv[2])
+        neighbor_select_rate = float(sys.argv[3])
+        max_init_height_rate = float(sys.argv[4])
+        max_diff_rate = float(sys.argv[5])
 
     config = Config(inverse_temperature,
                     neighbor_select_rate, max_init_height_rate, max_diff_rate)

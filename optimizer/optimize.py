@@ -34,6 +34,8 @@ class Evaluator:
             else:
                 return trial.suggest_uniform(
                     param.name, param.range_from, param.range_to)
+        elif param.type == Type.STRING:
+            return param.value
         else:
             return trial.suggest_int(
                 param.name, param.range_from, param.range_to)
