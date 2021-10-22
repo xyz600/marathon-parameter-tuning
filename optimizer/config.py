@@ -19,13 +19,16 @@ class Scale(Enum):
 
 class Type(Enum):
     FLOAT = 0,
-    INT = 1
+    INT = 1,
+    STRING = 2,
 
     def construct(type_str: str):
         if type_str == "float":
             return Type.FLOAT
         elif type_str == "int":
             return Type.INT
+        elif type_str == "string":
+            return Type.STRING
         else:
             raise ValueError("inappropreate type parameter")
 
@@ -37,6 +40,7 @@ class Param:
         self.range_from: float = 0.0
         self.range_to: float = 1.0
         self.scale: Scale = Scale.LINEAR
+        self.value: str = ""
 
 
 class Config:
@@ -66,10 +70,13 @@ class Config:
                 if param.type == Type.FLOAT:
                     param.range_from = float(param_yml["range_from"])
                     param.range_to = float(param_yml["range_to"])
+                    param.scale = Scale.construct(param_yml["scale"])
+                elif param.type == Type.STRING:
+                    param.value = param_yml["value"]
                 else:
                     param.range_from = int(param_yml["range_from"])
                     param.range_to = int(param_yml["range_to"])
-                param.scale = Scale.construct(param_yml["scale"])
+                    param.scale = Scale.construct(param_yml["scale"])
                 self.param_list.append(param)
 
             self.dataset_template = obj["dataset_template"]
