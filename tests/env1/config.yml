@@ -1,6 +1,6 @@
 dataset_size: 5
 number_of_iteration: 30
-exec_path: "./main"
+exec_path: "pypy3 tests/env2/solver.py"
 parallel_job_size: 1
 param_list:
   - name: temp
@@ -11,10 +11,20 @@ param_list:
     range_from: 1e-8
     range_to: 1e-1
     scale: log
+  - name: neighbor_select_rate
+    type: float
+    range_from: 0.1
+    range_to: 0.9
+    scale: linear
+  - name: max_init_height_rate
+    type: float
+    range_from: 0.1
+    range_to: 0.9
+    scale: linear
   - name: max_diff_rate
-    type: int
-    range_from: 20
-    range_to: 200
+    type: float
+    range_from: 0.05
+    range_to: 0.5
     scale: linear
   - name: input_data
     type: dataset

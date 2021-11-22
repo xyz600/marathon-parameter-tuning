@@ -36,27 +36,33 @@ class Evaluator:
                     param.name, param.range_from, param.range_to)
         elif param.type == Type.STRING:
             return param.value
+        elif param.type == Type.DATASET:
+            input_arg_list = ["<"] if param.is_redirect else []
+            input_arg_list.append(param.template)
+            dataset_range_arg_list = [":::"] + \
+                list(map(str, range(self.config.dataset_size)))
+            return input_arg_list + dataset_range_arg_list
         else:
             return trial.suggest_int(
                 param.name, param.range_from, param.range_to)
 
     def __evaluate(self, trial: optuna.Trial):
         params = []
+        dataset_param = []
         for param in self.config.param_list:
-            params.append(self.__suggest(trial, param))
+            if param.type == Type.DATASET:
+                dataset_param = (self.__suggest(trial, param))
+            else:
+                params.append(self.__suggest(trial, param))
 
         tmpdir = tempfile.TemporaryDirectory()
         # do experiment
         parallel_arg_list = ['parallel', '--progress',
                              '-j11', '--silent', '--result', tmpdir.name]
-        exec_arg_list = [self.config.exec_path] + list(map(str, params))
-        input_redirect_arg_list = ["<", self.config.dataset_template]
-        dataset_range_arg_list = [":::"] + \
-            list(map(str, range(self.config.dataset_size)))
+        exec_arg_list = [self.config.exec_path] + \
+            list(map(str, params)) + dataset_param
 
-        subprocess.run(parallel_arg_list + exec_arg_list +
-                       input_redirect_arg_list +
-                       dataset_range_arg_list,
+        subprocess.run(parallel_arg_list + exec_arg_list,
                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
         result = self.collect_result(tmpdir.name)

@@ -1,12 +1,11 @@
-dataset_template: "tests/dataset/{}.txt"
-number_of_iteration: 30
 dataset_size: 5
-exec_path: "pypy3 tests/solver.py"
-parallel_job_size: 2
+number_of_iteration: 30
+exec_path: "pypy3 tests/env2/solver.py"
+parallel_job_size: 1
 param_list:
   - name: temp
     type: string
-    value: hogehoge
+    value: hoge
   - name: reverse_temperature
     type: float
     range_from: 1e-8
@@ -27,3 +26,7 @@ param_list:
     range_from: 0.05
     range_to: 0.5
     scale: linear
+  - name: input_data
+    type: dataset
+    template: "tests/dataset/{}.txt"
+    is_redirect: false
