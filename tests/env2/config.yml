@@ -1,6 +1,6 @@
 dataset_size: 5
 number_of_iteration: 30
-exec_path: "pypy3 tests/env2/solver.py"
+exec_path: "python3 tests/env2/solver.py"
 parallel_job_size: 1
 param_list:
   - name: temp
