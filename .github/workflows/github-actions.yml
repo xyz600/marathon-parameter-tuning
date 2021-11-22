@@ -1,0 +1,26 @@
+name: GitHub Actions Demo
+on: [push]
+jobs:
+  unittest:
+    runs-on: ubuntu-latest
+    steps:
+      - run: pip3 install pytest
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - run: pytest tests
+  redirect-test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: pip3 install optuna
+      - run: sudo apt install parallel
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - run: python3 optimizer/optimize.py tests/env1/config.yml
+  non-redirect-test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: pip3 install optuna
+      - run: sudo apt install parallel
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - run: python3 optimizer/optimize.py tests/env2/config.yml
