@@ -1,16 +1,22 @@
-dataset_template: "../data/in/{:04}.txt"
-number_of_iteration: 500
-dataset_size: 100
+dataset_size: 5
+number_of_iteration: 30
 exec_path: "./main"
 parallel_job_size: 1
 param_list:
+  - name: temp
+    type: string
+    value: hoge
   - name: reverse_temperature
     type: float
-    range_from: 0.1
-    range_to: 20.0
+    range_from: 1e-8
+    range_to: 1e-1
     scale: log
-  - name: beam_width
+  - name: max_diff_rate
     type: int
-    range_from: 5
-    range_to: 20
+    range_from: 20
+    range_to: 200
     scale: linear
+  - name: input_data
+    type: dataset
+    template: "tests/dataset/{}.txt"
+    is_redirect: true
