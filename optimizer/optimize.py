@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import shutil
 import optuna
 import subprocess
 import tempfile
@@ -23,7 +24,7 @@ class Evaluator:
     def collect_result(self, root_path):
         result = []
         for i in range(self.config.dataset_size):
-            result.append(self.get_score(root_path, i))
+            result.append(self.get_score(root_path, f"{i:04}"))
         return result
 
     def __suggest(self, trial: optuna.Trial, param: Param):
@@ -40,7 +41,7 @@ class Evaluator:
             input_arg_list = ["<"] if param.is_redirect else []
             input_arg_list.append(param.template)
             dataset_range_arg_list = [":::"] + \
-                list(map(str, range(self.config.dataset_size)))
+                list(map(lambda num: f"{num:04}", range(self.config.dataset_size)))
             return input_arg_list + dataset_range_arg_list
         else:
             return trial.suggest_int(
@@ -55,20 +56,20 @@ class Evaluator:
             else:
                 params.append(self.__suggest(trial, param))
 
-        tmpdir = tempfile.TemporaryDirectory()
-        # do experiment
-        parallel_arg_list = ['parallel', '--progress',
-                             '-j11', '--silent', '--result', tmpdir.name]
-        exec_arg_list = [self.config.exec_path] + \
-            list(map(str, params)) + dataset_param
+        with tempfile.TemporaryDirectory() as tmpdir:
 
-        subprocess.run(parallel_arg_list + exec_arg_list,
-                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            # do experiment
+            parallel_arg_list = ['parallel', '--progress',
+                                '-j11', '--silent', '--result', tmpdir]
+            exec_arg_list = [self.config.exec_path] + \
+                list(map(str, params)) + dataset_param
 
-        result = self.collect_result(tmpdir.name)
-        tmpdir.cleanup()
+            subprocess.run(parallel_arg_list + exec_arg_list,
+                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-        return sum(result) / len(result)
+            result = self.collect_result(tmpdir)
+
+            return sum(result) / len(result)
 
     def doit(self):
         study = optuna.create_study(direction='minimize')

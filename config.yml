@@ -1,0 +1,24 @@
+dataset_size: 10
+number_of_iteration: 1000
+exec_path: "./main"
+parallel_job_size: 1
+param_list:
+  - name: start_temperature
+    type: float
+    range_from: 10
+    range_to: 50
+    scale: log
+  - name: end_temperature
+    type: float
+    range_from: 0.1
+    range_to: 5
+    scale: log
+  - name: opt2_rate
+    type: float
+    range_from: 0.0
+    range_to: 1.0
+    scale: linear
+  - name: input_data
+    type: dataset
+    template: "../../rust/tools/in/{}.txt"
+    is_redirect: true
