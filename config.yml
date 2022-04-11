@@ -1,4 +1,4 @@
-dataset_size: 10
+dataset_size: 100
 number_of_iteration: 1000
 exec_path: "./main"
 parallel_job_size: 1
@@ -6,18 +6,23 @@ param_list:
   - name: start_temperature
     type: float
     range_from: 10
-    range_to: 50
+    range_to: 100
     scale: log
   - name: end_temperature
     type: float
     range_from: 0.1
-    range_to: 5
+    range_to: 20
     scale: log
   - name: opt2_rate
     type: float
-    range_from: 0.0
-    range_to: 1.0
+    range_from: 0.2
+    range_to: 0.8
     scale: linear
+  - name: best_overwritten_frequency
+    type: int
+    range_from: 256
+    range_to: 8192
+    scale: log
   - name: input_data
     type: dataset
     template: "../../rust/tools/in/{}.txt"

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -ue
+
 pushd ../../rust
 cargo build --release -p main
 cp target/release/main ../externals/marathon-parameter-tuning
