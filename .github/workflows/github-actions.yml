@@ -24,3 +24,19 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v2
       - run: python3 optimizer/optimize.py tests/env2/config.yml
+  non-zero-padding-test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: pip3 install optuna
+      - run: sudo apt install parallel
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - run: python3 optimizer/optimize.py tests/env3/config.yml
+  non-maximization-test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: pip3 install optuna
+      - run: sudo apt install parallel
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - run: python3 optimizer/optimize.py tests/env4/config.yml
