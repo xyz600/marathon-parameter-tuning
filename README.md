@@ -1,7 +1,6 @@
 # marathon-parameter-tuning
 
 parameter tuning environment for heuristics contest.
-最小化問題を扱う点に注意.
 
 ## 利用方法
 
@@ -18,6 +17,7 @@ dataset_size: 5
 number_of_iteration: 100
 exec_path: "./main"
 parallel_job_size: 1
+minimize: true
 param_list:
   - name: start_temperature
     type: float
@@ -45,12 +45,13 @@ param_list:
 
 yaml のグローバルに設定できるパラメータは以下の通りである
 
-| パラメータ名        | 型  | 意味                                                    | 制約 |
-| ------------------- | --- | ------------------------------------------------------- | ---- |
-| dataset_size        | int | 使うデータセットの個数。番号は 0～$dataset_size - 1まで | > 0  |
-| exec_path           | str | 実行バイナリのパス                                      |      |
-| parallel_job_size   | int |                                                         | > 0  |
-| number_of_iteration | int |                                                         | > 0  |
+| パラメータ名        | 型   | 意味                                                    | 制約 |
+| ------------------- | ---- | ------------------------------------------------------- | ---- |
+| dataset_size        | int  | 使うデータセットの個数。番号は 0～$dataset_size - 1まで | > 0  |
+| exec_path           | str  | 実行バイナリのパス                                      |      |
+| parallel_job_size   | int  |                                                         | > 0  |
+| number_of_iteration | int  |                                                         | > 0  |
+| minimize            | bool | 最小化問題 or 最大化問題                                |      |
 
 ### ローカルパラメータ一覧
 

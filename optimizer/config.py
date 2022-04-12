@@ -96,5 +96,6 @@ class Config:
             self.number_of_iteration = int(obj["number_of_iteration"])
             self.exec_path = obj["exec_path"]
             self.parallel_job_size = obj["parallel_job_size"]
+            self.direction = obj["minimize"] if "minimize" else "maximize"
 
         self._validate()
