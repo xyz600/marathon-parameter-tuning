@@ -2,6 +2,7 @@ import os
 import yaml
 from enum import Enum
 from typing import List
+import pathlib
 
 
 class Scale(Enum):
@@ -45,7 +46,8 @@ class Param:
         self.scale: Scale = Scale.LINEAR
         self.value: str = ""
         self.is_redirect: bool = True
-        self.template: str = ""
+        self.data_dir: pathlib.Path = pathlib.Path()
+        self.filename: str = ""
         self.size: int = 0
 
 
@@ -82,7 +84,8 @@ class Config:
                     param.value = param_yml["value"]
                 elif param.type == Type.DATASET:
                     param.is_redirect = param_yml["is_redirect"]
-                    param.template = param_yml["template"]
+                    param.data_dir = pathlib.Path(param_yml["data_dir"])
+                    param.filename = param_yml["filename"]
                 else:
                     param.range_from = int(param_yml["range_from"])
                     param.range_to = int(param_yml["range_to"])
