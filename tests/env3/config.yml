@@ -1,6 +1,6 @@
 dataset_size: 5
 number_of_iteration: 2
-exec_path: "python3 tests/env1/solver.py"
+exec_path: "python3 tests/env3/solver.py"
 parallel_job_size: 1
 minimize: true
 param_list:
@@ -29,6 +29,6 @@ param_list:
     scale: linear
   - name: input_data
     type: dataset
-    data_dir: "tests/dataset/"
-    filename: "{}.txt"
-    is_redirect: true
+    data_dir: "tests/dataset_0/"
+    filename: "{:03}.txt"
+    is_redirect: false

@@ -1,8 +1,8 @@
 dataset_size: 5
 number_of_iteration: 2
-exec_path: "python3 tests/env1/solver.py"
+exec_path: "python3 tests/env4/solver.py"
 parallel_job_size: 1
-minimize: true
+minimize: false
 param_list:
   - name: temp
     type: string
@@ -31,4 +31,4 @@ param_list:
     type: dataset
     data_dir: "tests/dataset/"
     filename: "{}.txt"
-    is_redirect: true
+    is_redirect: false

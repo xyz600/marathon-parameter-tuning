@@ -2,6 +2,7 @@ dataset_size: 5
 number_of_iteration: 30
 exec_path: "./main"
 parallel_job_size: 1
+minimize: true
 param_list:
   - name: temp
     type: string
@@ -18,5 +19,6 @@ param_list:
     scale: linear
   - name: input_data
     type: dataset
-    template: "tests/dataset/{}.txt"
+    data_dir: "tests/dataset/"
+    filename: "{}.txt"
     is_redirect: true
