@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import shutil
 import optuna
 import subprocess
 import tempfile
@@ -13,18 +14,17 @@ class Evaluator:
     def __init__(self, config: Config):
         self.config = config
 
-    def get_filepath(self, root_path, idx):
-        return "{}/1/{}/stderr".format(root_path, idx)
+    def get_score(self, root_path, filename, idx):
+        name = filename.format(idx)
+        filepath = "{}/1/{}/stderr".format(root_path, name)
 
-    def get_score(self, root_path, idx):
-        with open(self.get_filepath(root_path, idx), 'r') as fin:
+        with open(filepath, 'r') as fin:
             return float(fin.readlines()[-1].strip())
 
-    def collect_result(self, root_path):
-        result = []
-        for i in range(self.config.dataset_size):
-            result.append(self.get_score(root_path, i))
-        return result
+    def collect_result(self, root_path, filename):
+        return list(map(
+            lambda i: self.get_score(root_path, filename, i),
+            range(self.config.dataset_size)))
 
     def __suggest(self, trial: optuna.Trial, param: Param):
         if param.type == Type.FLOAT:
@@ -38,9 +38,9 @@ class Evaluator:
             return param.value
         elif param.type == Type.DATASET:
             input_arg_list = ["<"] if param.is_redirect else []
-            input_arg_list.append(param.template)
-            dataset_range_arg_list = [":::"] + \
-                list(map(str, range(self.config.dataset_size)))
+            input_arg_list.append(param.data_dir / "{}")
+            dataset_range_arg_list = [
+                ":::"] + list(map(lambda num: param.filename.format(num), range(self.config.dataset_size)))
             return input_arg_list + dataset_range_arg_list
         else:
             return trial.suggest_int(
@@ -49,26 +49,28 @@ class Evaluator:
     def __evaluate(self, trial: optuna.Trial):
         params = []
         dataset_param = []
+        filename = ""
         for param in self.config.param_list:
             if param.type == Type.DATASET:
                 dataset_param = (self.__suggest(trial, param))
+                filename = param.filename
             else:
                 params.append(self.__suggest(trial, param))
 
-        tmpdir = tempfile.TemporaryDirectory()
-        # do experiment
-        parallel_arg_list = ['parallel', '--progress',
-                             '-j11', '--silent', '--result', tmpdir.name]
-        exec_arg_list = [self.config.exec_path] + \
-            list(map(str, params)) + dataset_param
+        with tempfile.TemporaryDirectory() as tmpdir:
 
-        subprocess.run(parallel_arg_list + exec_arg_list,
-                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            # do experiment
+            parallel_arg_list = ['parallel', '--progress',
+                                 '-j11', '--silent', '--result', tmpdir]
+            exec_arg_list = [self.config.exec_path] + \
+                list(map(str, params)) + dataset_param
 
-        result = self.collect_result(tmpdir.name)
-        tmpdir.cleanup()
+            subprocess.run(parallel_arg_list + exec_arg_list,
+                           stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-        return sum(result) / len(result)
+            result = self.collect_result(tmpdir, filename)
+
+            return sum(result) / len(result)
 
     def doit(self):
         study = optuna.create_study(direction='minimize')

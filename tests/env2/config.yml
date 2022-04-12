@@ -28,5 +28,6 @@ param_list:
     scale: linear
   - name: input_data
     type: dataset
-    template: "tests/dataset/{}.txt"
+    data_dir: "tests/dataset/"
+    filename: "{}.txt"
     is_redirect: false

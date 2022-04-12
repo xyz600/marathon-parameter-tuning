@@ -1,6 +1,7 @@
 # marathon-parameter-tuning
 
-parameter tuning environment for heuristics contest
+parameter tuning environment for heuristics contest.
+最小化問題を扱う点に注意.
 
 ## 利用方法
 
