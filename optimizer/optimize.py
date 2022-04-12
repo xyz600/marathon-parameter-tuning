@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import shutil
 import optuna
 import subprocess
 import tempfile
-import sys
 from config import Config, Type, Scale, Param
 import argparse
 
